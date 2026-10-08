@@ -1,0 +1,9 @@
+services:
+  tv-screen-share:
+    build: .
+    container_name: tv-screen-share
+    ports:
+      - "3000:3000"
+    environment:
+      SCREEN_SHARE_PIN: ABC123
+    restart: unless-stopped

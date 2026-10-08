@@ -1,0 +1,361 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>TV Screen Share</title>
+
+
+  <link rel="stylesheet" href="/style.css">
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+  <header class="brand-header">
+
+    <div class="brand-mark" aria-hidden="true">
+
+      <div class="signal"></div>
+
+      <div class="tv-shell">
+        <div class="play-button"></div>
+      </div>
+
+    </div>
+
+    <div class="brand-text">
+
+      <h1>
+        TV SCREEN SHARE
+      </h1>
+
+      <div class="brand-subtitle">
+        Share • Connect • Collaborate
+      </div>
+
+    </div>
+
+    <div class="scribble-tag">
+      Better
+      <span>Together</span>
+    </div>
+
+  </header>
+
+
+  <!-- ======================================
+       MAIN SCREEN
+       ====================================== -->
+
+  <div id="mainScreen">
+
+    <div class="card">
+
+      <div class="card-header">
+
+        <div class="section-badge" aria-hidden="true">👥</div>
+
+        <div class="card-copy">
+
+          <h3>
+            Choose Role
+          </h3>
+
+          <p class="role-subtext">
+            Select your role to continue with screen sharing.
+          </p>
+
+        </div>
+
+      </div>
+
+      
+
+
+      <p style="margin-top: 10px; font-size: 18px; color: #f9f9fa;">
+
+        <strong>
+          Host
+        </strong>
+
+        = Presenting the screen
+
+        <br>
+
+        <strong>
+          Viewer
+        </strong>
+
+        = Guest/Visitor watching the screen
+
+      </p>
+
+
+      <label for="roomInput" class="room-label">
+        Room name
+      </label>
+
+      <br>
+      <input
+        id="roomInput"
+        value="Main-Screen"
+        placeholder="Room name"
+        maxlength="50"
+        readonly
+      >
+
+
+      <label for="viewerNameInput" class="room-label">
+        Your name 
+      </label>
+
+      <input
+        id="viewerNameInput"
+        type="text"
+        placeholder="Enter your name for this session"
+        maxlength="50"
+        autocomplete="name"
+      >
+
+
+      <br>
+      <br>
+
+
+      <div class="role-button-row">
+
+        <button id="presenterButton">
+          Host
+        </button>
+
+
+        <button id="viewerButton">
+          Viewer
+        </button>
+
+      </div>
+
+
+      <!-- ====================================
+           PIN
+           ==================================== -->
+
+      <div id="pinSection">
+
+        <h3>
+          Presenter PIN
+        </h3>
+
+
+        <p class="small-text">
+
+          Enter your 6-character PIN.
+
+        </p>
+
+
+        <input
+          id="pinInput"
+          type="password"
+          placeholder="******"
+          maxlength="6"
+          autocomplete="off"
+        >
+
+
+        <button
+          id="showPinToggle"
+          class="show-pin-toggle"
+          type="button"
+          aria-label="Show PIN"
+        >
+          👁
+        </button>
+
+
+        <br>
+
+
+        <button id="pinButton">
+          Unlock Presenter
+        </button>
+
+
+        <button
+          id="cancelPinButton"
+          class="back-button"
+        >
+          Back
+        </button>
+
+
+        <div id="pinError">
+
+          Incorrect PIN.
+
+        </div>
+
+      </div>
+
+
+      <div id="status">
+        Connecting...
+      </div>
+
+
+      <div id="viewerCount"></div>
+
+    </div>
+
+  </div>
+
+
+  <!-- ======================================
+       PRESENTER SCREEN
+       ====================================== -->
+
+  <div id="presenterScreen">
+
+    <div class="card">
+
+      <h2>
+        Presenter Mode
+      </h2>
+
+
+      <p>
+        You are authenticated as the presenter.
+      </p>
+
+      <div class="quality-control">
+        <label for="qualitySelect">Maximum stream quality</label>
+        <select id="qualitySelect" aria-describedby="qualityHelp">
+          <option value="480p">480p</option>
+          <option value="720p" selected>720p (Recommended)</option>
+          <option value="1080p">1080p</option>
+        </select>
+        <p id="qualityHelp" class="small-text">
+          Applies live to all viewers. The source screen resolution may limit the maximum.
+        </p>
+      </div>
+
+      <button id="shareButton">
+        Start Screen Sharing
+      </button>
+
+
+      <button
+        id="presenterBackButton"
+        class="back-button"
+      >
+        Back to Main Screen
+      </button>
+
+
+      <p id="presenterStatus">
+        Ready to share your screen.
+      </p>
+
+
+      <p id="presenterViewerCount"></p>
+
+
+      <div id="approvalPanel">
+
+        <h3>
+          Viewer approvals
+        </h3>
+
+        <div id="approvalList"></div>
+
+      </div>
+
+
+      <div id="activeViewerPanel">
+
+        <h3>
+          Currently viewing
+        </h3>
+
+        <div id="activeViewerList"></div>
+
+      </div>
+
+
+      <video
+        id="presenterVideo"
+        autoplay
+        playsinline
+        muted
+      ></video>
+
+    </div>
+
+  </div>
+
+
+  <!-- ======================================
+       VIEWER SCREEN
+       ====================================== -->
+
+  <div id="viewerScreen">
+
+    <div class="card">
+
+      <h2>
+        Viewer Mode
+      </h2>
+
+
+      <p id="viewerStatus">
+        Waiting for presenter...
+      </p>
+
+
+      <button
+        id="viewerBackButton"
+        class="back-button"
+      >
+        Back to Main Screen
+      </button>
+
+
+      <video
+        id="video"
+        autoplay
+        playsinline
+        controls
+      ></video>
+
+    </div>
+
+  </div>
+
+
+</div>
+
+
+<!-- ========================================
+     SOCKET.IO
+     ======================================== -->
+
+<script src="/socket.io/socket.io.js"></script>
+
+
+<script src="/script.js"></script>
+
+</body>
+
+</html>
