@@ -85,7 +85,45 @@
     }
 
 
-    .brand-header {
+        .screen-watermark {
+          position: fixed;
+          left: 18px;
+          right: 18px;
+          bottom: 14px;
+          display: flex;
+          justify-content: space-between;
+          align-items: end;
+          pointer-events: none;
+          z-index: 20;
+          font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+          letter-spacing: 0.02em;
+          text-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+        }
+
+
+        .design-credit,
+        .company-brand {
+          display: inline-block;
+          white-space: nowrap;
+          line-height: 1.2;
+        }
+
+
+        .design-credit {
+          font-size: 11px;
+          font-weight: 500;
+          color: rgba(255, 255, 255, 0.7);
+        }
+
+
+        .company-brand {
+          font-size: 12px;
+          font-weight: 600;
+          color: rgba(255, 255, 255, 0.84);
+        }
+
+
+        .brand-header {
       display: flex;
       align-items: center;
       justify-content: center;
