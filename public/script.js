@@ -24,6 +24,9 @@
   const viewerNameInput =
     document.getElementById("viewerNameInput");
 
+  const viewerNameField =
+    document.getElementById("viewerNameField");
+
   const PIN_PATTERN = /^[A-Za-z0-9]{6}$/;
 
   const presenterButton =
@@ -528,6 +531,9 @@
 
     pinSection.style.display =
       "none";
+
+    viewerNameField.hidden =
+      true;
 
     approvalPanel.style.display =
       "none";
@@ -1165,6 +1171,8 @@
 
       presenterButton.classList.add("selected");
       viewerButton.classList.remove("selected");
+      viewerNameField.hidden =
+        true;
 
       const selectedRoom =
         roomInput.value.trim();
@@ -1440,6 +1448,10 @@
 
       viewerButton.classList.add("selected");
       presenterButton.classList.remove("selected");
+      viewerNameField.hidden =
+        false;
+      pinSection.style.display =
+        "none";
 
       const selectedRoom =
         roomInput.value.trim();
@@ -1476,14 +1488,8 @@
           : "";
 
       if (!enteredName) {
-        alert(
-          "Enter your name before joining."
-        );
-
-        if (viewerNameInput) {
-          viewerNameInput.focus();
-        }
-
+        setStatus("Enter your name to continue as a viewer.");
+        viewerNameInput.focus();
         return;
       }
 

@@ -117,17 +117,19 @@
       >
 
 
-      <label for="viewerNameInput" class="room-label">
-        Your name 
-      </label>
+      <div id="viewerNameField" hidden>
+        <label for="viewerNameInput" class="room-label">
+          Your name
+        </label>
 
-      <input
-        id="viewerNameInput"
-        type="text"
-        placeholder="Enter your name for this session"
-        maxlength="50"
-        autocomplete="name"
-      >
+        <input
+          id="viewerNameInput"
+          type="text"
+          placeholder="Enter your name for this session"
+          maxlength="50"
+          autocomplete="name"
+        >
+      </div>
 
 
       <br>
@@ -166,39 +168,37 @@
         </p>
 
 
-        <input
-          id="pinInput"
-          type="password"
-          placeholder="******"
-          maxlength="6"
-          autocomplete="off"
-        >
+        <div class="pin-entry-row">
+          <input
+            id="pinInput"
+            type="password"
+            placeholder="******"
+            maxlength="6"
+            autocomplete="off"
+          >
 
+          <button
+            id="showPinToggle"
+            class="show-pin-toggle"
+            type="button"
+            aria-label="Show PIN"
+          >
+            👁
+          </button>
+        </div>
 
-        <button
-          id="showPinToggle"
-          class="show-pin-toggle"
-          type="button"
-          aria-label="Show PIN"
-        >
-          👁
-        </button>
+        <div class="pin-action-row">
+          <button id="pinButton">
+            Unlock Presenter
+          </button>
 
-
-        <br>
-
-
-        <button id="pinButton">
-          Unlock Presenter
-        </button>
-
-
-        <button
-          id="cancelPinButton"
-          class="back-button"
-        >
-          Back
-        </button>
+          <button
+            id="cancelPinButton"
+            class="back-button"
+          >
+            Back
+          </button>
+        </div>
 
 
         <div id="pinError">

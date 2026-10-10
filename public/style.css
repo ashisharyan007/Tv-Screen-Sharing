@@ -461,11 +461,13 @@
 
       justify-content: center;
 
-      width: 42px;
+      width: 48px;
 
-      height: 42px;
+      height: 48px;
 
-      margin-left: 8px;
+      flex: 0 0 48px;
+
+      margin: 0;
 
       padding: 0;
 
@@ -498,6 +500,14 @@
       border-radius: 12px;
       background: rgba(15, 38, 70, 0.46);
       border: 1px solid rgba(118, 191, 255, 0.38);
+    }
+
+    #viewerNameField {
+      margin-top: 12px;
+    }
+
+    #viewerNameField[hidden] {
+      display: none;
     }
 
 
@@ -852,10 +862,48 @@
 
       font-weight: bold;
 
-      width: 180px;
+      width: 100%;
+
+      max-width: none;
+
+      min-width: 0;
+
+      flex: 1;
 
       border-radius: 10px;
 
+    }
+
+    .pin-entry-row,
+    .pin-action-row {
+      display: flex;
+      align-items: stretch;
+      gap: 10px;
+      width: min(100%, 420px);
+    }
+
+    .pin-entry-row {
+      margin-top: 12px;
+    }
+
+    .pin-action-row {
+      margin-top: 12px;
+    }
+
+    #pinButton,
+    #cancelPinButton {
+      flex: 1 1 0;
+      min-width: 0;
+      min-height: 52px;
+      margin: 0;
+    }
+
+    #pinButton {
+      background: linear-gradient(180deg, #38a3ff, #1474d4);
+    }
+
+    #cancelPinButton {
+      background: rgba(148, 163, 184, 0.14);
     }
 
 
