@@ -39,6 +39,48 @@
 
     }
 
+    .cursor-sparkle {
+      position: fixed;
+      z-index: 100;
+      pointer-events: none;
+      user-select: none;
+      font-size: 13px;
+      line-height: 1;
+      animation: cursor-sparkle-fade 720ms ease-out forwards;
+      will-change: transform, opacity;
+    }
+
+    .cursor-sparkle-cool {
+      color: #b8f5ff;
+      text-shadow:
+        0 0 5px rgba(255, 255, 255, 0.9),
+        0 0 13px rgba(117, 220, 255, 0.95);
+    }
+
+    .cursor-sparkle-warm {
+      color: #ffe5ad;
+      text-shadow:
+        0 0 5px rgba(255, 255, 255, 0.9),
+        0 0 13px rgba(255, 205, 113, 0.95);
+    }
+
+    @keyframes cursor-sparkle-fade {
+      0% {
+        opacity: 0;
+        transform: translate(-50%, -40%) scale(0.3) rotate(-20deg);
+      }
+
+      18% {
+        opacity: 1;
+        transform: translate(-50%, -65%) scale(1) rotate(0deg);
+      }
+
+      100% {
+        opacity: 0;
+        transform: translate(-50%, -125%) scale(0.35) rotate(35deg);
+      }
+    }
+
 
     body::before,
     body::after {
@@ -103,38 +145,169 @@
 
         .design-credit,
         .company-brand {
+          position: relative;
           display: inline-block;
           white-space: nowrap;
           line-height: 1.2;
-          background: linear-gradient(
-            135deg,
-            rgba(5, 20, 40, 0.56),
-            rgba(5, 20, 40, 0.34)
-          );
-          border: 1px solid rgba(226, 197, 137, 0.34);
+          background: linear-gradient(135deg, rgba(8, 31, 58, 0.88), rgba(12, 47, 79, 0.72));
+          border: 1px solid rgba(151, 207, 255, 0.4);
           border-radius: 999px;
-          padding: 6px 12px;
+          padding: 7px 13px;
           box-shadow:
-            inset 0 1px 0 rgba(255, 255, 255, 0.08),
-            0 3px 12px rgba(0, 0, 0, 0.16);
-          backdrop-filter: blur(5px);
-          -webkit-backdrop-filter: blur(5px);
+            inset 0 1px 0 rgba(255, 255, 255, 0.13),
+            0 4px 18px rgba(0, 0, 0, 0.24),
+            0 0 14px rgba(89, 184, 255, 0.12);
+          backdrop-filter: blur(8px);
+          -webkit-backdrop-filter: blur(8px);
+        }
+
+        .watermark-orbit {
+          position: absolute;
+          inset: -11px;
+          pointer-events: none;
+          animation: watermark-orbit 12s linear infinite;
+          z-index: 1;
+        }
+
+        .watermark-orbit i {
+          position: absolute;
+          color: #b8f5ff;
+          font-size: 10px;
+          font-style: normal;
+          line-height: 1;
+          text-shadow:
+            0 0 4px rgba(255, 255, 255, 0.95),
+            0 0 10px rgba(117, 220, 255, 0.9);
+          animation: watermark-orbit-twinkle 2.4s ease-in-out infinite;
+        }
+
+        .watermark-orbit i:nth-child(1) {
+          top: 0;
+          left: 50%;
+        }
+
+        .watermark-orbit i:nth-child(2) {
+          top: 25%;
+          right: 0;
+          animation-delay: 0.45s;
+        }
+
+        .watermark-orbit i:nth-child(3) {
+          right: 12%;
+          bottom: 0;
+          animation-delay: 0.9s;
+        }
+
+        .watermark-orbit i:nth-child(4) {
+          bottom: 0;
+          left: 12%;
+          animation-delay: 1.35s;
+        }
+
+        .watermark-orbit i:nth-child(5) {
+          top: 25%;
+          left: 0;
+          animation-delay: 1.8s;
+        }
+
+        .company-brand .watermark-orbit i {
+          color: #ffe6ae;
+          text-shadow:
+            0 0 4px rgba(255, 255, 255, 0.95),
+            0 0 10px rgba(255, 205, 113, 0.9);
+        }
+
+        .design-credit,
+        .company-brand {
+          animation: watermark-glow 4.2s ease-in-out infinite;
+        }
+
+        .company-brand {
+          animation: watermark-glow-gold 4.2s ease-in-out infinite;
+          animation-delay: 1.1s;
+        }
+
+        @keyframes watermark-glow {
+          0%, 100% {
+            box-shadow:
+              inset 0 1px 0 rgba(255, 255, 255, 0.13),
+              0 4px 18px rgba(0, 0, 0, 0.24),
+              0 0 14px rgba(89, 184, 255, 0.12);
+          }
+
+          50% {
+            box-shadow:
+              inset 0 1px 0 rgba(255, 255, 255, 0.17),
+              0 4px 18px rgba(0, 0, 0, 0.24),
+              0 0 23px rgba(105, 204, 255, 0.3);
+          }
+        }
+
+        @keyframes watermark-glow-gold {
+          0%, 100% {
+            box-shadow:
+              inset 0 1px 0 rgba(255, 255, 255, 0.14),
+              0 4px 18px rgba(0, 0, 0, 0.24),
+              0 0 16px rgba(255, 202, 111, 0.14);
+          }
+
+          50% {
+            box-shadow:
+              inset 0 1px 0 rgba(255, 255, 255, 0.18),
+              0 4px 18px rgba(0, 0, 0, 0.24),
+              0 0 24px rgba(255, 211, 131, 0.34);
+          }
+        }
+
+        @keyframes watermark-twinkle {
+          0%, 100% {
+            opacity: 0.45;
+            transform: scale(0.8) rotate(0deg);
+          }
+
+          50% {
+            opacity: 1;
+            transform: scale(1.15) rotate(18deg);
+          }
+        }
+
+        @keyframes watermark-orbit {
+          to {
+            transform: rotate(360deg);
+          }
+        }
+
+        @keyframes watermark-orbit-twinkle {
+          0%, 100% {
+            opacity: 0.5;
+            transform: scale(0.75);
+          }
+
+          50% {
+            opacity: 1;
+            transform: scale(1.25);
+          }
         }
 
 
         .design-credit {
           font-size: 10.5px;
           font-weight: 500;
-          color: rgba(246, 239, 222, 0.86);
+          color: rgba(230, 248, 255, 0.92);
         }
 
 
         .company-brand {
           font-size: 11.5px;
           font-weight: 700;
-          color: #f1d9a6;
+          color: #ffe5b0;
           letter-spacing: 0.075em;
           text-transform: uppercase;
+          border-color: rgba(255, 220, 156, 0.48);
+          box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.14),
+            0 4px 18px rgba(0, 0, 0, 0.24),
+            0 0 16px rgba(255, 202, 111, 0.14);
         }
 
 
@@ -149,8 +322,17 @@
           .design-credit,
           .company-brand {
             font-size: 8.5px;
-            padding: 4px 8px;
+            padding: 5px 8px;
             letter-spacing: 0.03em;
+          }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .design-credit,
+          .company-brand,
+          .watermark-orbit,
+          .watermark-orbit i {
+            animation: none;
           }
         }
 
@@ -163,6 +345,8 @@
       margin: 18px auto 34px;
       position: relative;
       width: min(1100px, 100%);
+      cursor: default;
+      user-select: none;
     }
 
 
@@ -366,6 +550,52 @@
       color: rgba(226, 240, 255, 0.88);
       font-size: clamp(1.02rem, 1.15vw, 1.45rem);
       line-height: 1.5;
+    }
+
+    .role-guide {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin: 18px 0 22px;
+    }
+
+    .role-guide-item {
+      padding: 14px 16px;
+      border: 1px solid rgba(163, 207, 255, 0.24);
+      border-radius: 16px;
+      background: linear-gradient(
+        145deg,
+        rgba(9, 35, 69, 0.42),
+        rgba(32, 92, 150, 0.2)
+      );
+    }
+
+    .role-guide-title {
+      display: block;
+      margin-bottom: 5px;
+      color: #f1d9a6;
+      font-size: 0.92rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .role-guide-item p {
+      margin: 0;
+      color: rgba(239, 247, 255, 0.9);
+      font-size: 0.96rem;
+      line-height: 1.45;
+    }
+
+    @media (max-width: 560px) {
+      .role-guide {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+
+      .role-guide-item {
+        padding: 12px 14px;
+      }
     }
 
 
@@ -853,8 +1083,6 @@
 
 
     #pinInput {
-
-      text-transform: uppercase;
 
       letter-spacing: 3px;
 

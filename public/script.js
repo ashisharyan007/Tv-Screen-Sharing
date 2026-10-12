@@ -1223,7 +1223,7 @@
 
 
       setStatus(
-        "Enter the 6-character Presenter PIN."
+        "Enter the 6-character PIN."
       );
 
     }
@@ -1241,6 +1241,16 @@
       const pin =
         pinInput.value.trim();
 
+      if (!pin) {
+        pinError.textContent =
+          "Please enter your PIN.";
+
+        pinError.style.display =
+          "block";
+
+        pinInput.focus();
+        return;
+      }
 
       if (
         !PIN_PATTERN.test(
@@ -1249,7 +1259,7 @@
       ) {
 
         pinError.textContent =
-          "PIN must be exactly 6 characters using only numbers or letters.";
+          "PIN must be exactly 6 characters using only letters and numbers.";
 
 
         pinError.style.display =
@@ -1383,7 +1393,7 @@
       ) {
 
         pinError.textContent =
-          "Incorrect PIN. Returning to main screen...";
+          "Incorrect PIN. Please try again.";
 
 
         pinError.style.display =
@@ -1393,17 +1403,6 @@
         setStatus(
           "Incorrect PIN."
         );
-
-
-        setTimeout(
-          () => {
-
-            showMainScreen();
-
-          },
-          1500
-        );
-
 
         return;
 
@@ -1679,6 +1678,20 @@
   // ==========================================
 
   socket.on(
+    "viewer-status",
+    ({ status, message }) => {
+      if (
+        role === "viewer" &&
+        status === "pending-approval"
+      ) {
+        viewerStatus.textContent =
+          message;
+      }
+    }
+  );
+
+
+  socket.on(
     "viewer-request",
     ({ socketId, name }) => {
 
@@ -1699,6 +1712,24 @@
         `Approval pending for ${name}.`
       );
 
+    }
+  );
+
+  socket.on(
+    "viewer-request-expired",
+    ({ socketId, name, message }) => {
+      if (role === "presenter" && socketId) {
+        delete pendingViewers[socketId];
+        renderApprovalList();
+        setPresenterStatus(
+          `Approval request from ${name} expired after 30 minutes.`
+        );
+        return;
+      }
+
+      if (role === "viewer" && message) {
+        setViewerStatus(message);
+      }
     }
   );
 
@@ -2292,3 +2323,37 @@
   viewerButton.classList.remove("selected");
 
   showMainScreen();
+
+  const reducedMotionPreference =
+    window.matchMedia("(prefers-reduced-motion: reduce)");
+  const sparkleSymbols = ["✦", "✧", "✴", "✦"];
+  let lastSparkleTime = 0;
+  let sparkleIndex = 0;
+
+  document.addEventListener("pointermove", (event) => {
+    if (
+      reducedMotionPreference.matches ||
+      event.pointerType === "touch"
+    ) {
+      return;
+    }
+
+    const now = performance.now();
+    if (now - lastSparkleTime < 48) {
+      return;
+    }
+    lastSparkleTime = now;
+
+    const sparkle = document.createElement("span");
+    sparkle.className = `cursor-sparkle ${
+      sparkleIndex % 2 === 0 ? "cursor-sparkle-cool" : "cursor-sparkle-warm"
+    }`;
+    sparkle.setAttribute("aria-hidden", "true");
+    sparkle.textContent = sparkleSymbols[sparkleIndex % sparkleSymbols.length];
+    sparkleIndex += 1;
+    sparkle.style.left = `${event.clientX}px`;
+    sparkle.style.top = `${event.clientY}px`;
+
+    document.body.appendChild(sparkle);
+    sparkle.addEventListener("animationend", () => sparkle.remove(), { once: true });
+  });

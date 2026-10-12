@@ -18,6 +18,7 @@ const io = new Server(server);
 const PORT = 3000;
 const roomStates = new Map();
 const PIN_PATTERN = /^[A-Za-z0-9]{6}$/;
+const PENDING_REQUEST_TTL_MS = 30 * 60 * 1000;
 
 function isValidPin(pin) {
 
@@ -38,6 +39,7 @@ function getRoomState(roomId) {
 
     roomStates.set(roomId, {
       pending: new Map(),
+      pendingTimers: new Map(),
       approved: new Map(),
       active: new Map(),
       members: new Map(),
@@ -50,6 +52,61 @@ function getRoomState(roomId) {
   return roomStates.get(roomId);
 
 }
+
+function clearPendingRequestTimer(room, socketId) {
+
+  const timer = room.pendingTimers.get(socketId);
+
+  if (timer) {
+    clearTimeout(timer);
+    room.pendingTimers.delete(socketId);
+  }
+
+}
+
+
+function expirePendingViewerRequest(roomId, room, socketId, member) {
+
+  if (room.pending.get(socketId) !== member) {
+    return;
+  }
+
+  clearPendingRequestTimer(room, socketId);
+  room.pending.delete(socketId);
+  room.members.delete(socketId);
+
+  io.to(socketId).emit(
+    "viewer-request-expired",
+    {
+      message:
+        "Your approval request expired after 30 minutes. Return to the main screen and select Viewer to request again."
+    }
+  );
+
+  if (room.presenterSocketId) {
+    io.to(room.presenterSocketId).emit(
+      "viewer-request-expired",
+      {
+        socketId,
+        name: member.name
+      }
+    );
+  }
+
+  console.log(
+    `Viewer request expired: ${socketId} in ${roomId}`
+  );
+
+  if (
+    room.pending.size === 0 &&
+    room.approved.size === 0 &&
+    !room.presenterSocketId
+  ) {
+    roomStates.delete(roomId);
+  }
+
+}
+
 
 function broadcastActiveViewers(roomId) {
 
@@ -80,6 +137,7 @@ function removeSocketFromRoom(roomId, socketId) {
     return;
   }
 
+  clearPendingRequestTimer(room, socketId);
   room.pending.delete(socketId);
   room.approved.delete(socketId);
   room.active.delete(socketId);
@@ -240,6 +298,26 @@ io.on("connection", (socket) => {
           }
         );
 
+        room.pending.forEach((viewer, viewerSocketId) => {
+          if (Date.now() - viewer.joinedAt >= PENDING_REQUEST_TTL_MS) {
+            expirePendingViewerRequest(
+              roomId,
+              room,
+              viewerSocketId,
+              viewer
+            );
+            return;
+          }
+
+          socket.emit(
+            "viewer-request",
+            {
+              socketId: viewerSocketId,
+              name: viewer.name
+            }
+          );
+        });
+
         return;
       }
 
@@ -290,6 +368,18 @@ io.on("connection", (socket) => {
 
         room.members.set(socket.id, member);
         room.pending.set(socket.id, member);
+        clearPendingRequestTimer(room, socket.id);
+
+        const pendingTimer = setTimeout(() => {
+          expirePendingViewerRequest(
+            roomId,
+            room,
+            socket.id,
+            member
+          );
+        }, PENDING_REQUEST_TTL_MS);
+
+        room.pendingTimers.set(socket.id, pendingTimer);
 
         room.nextJoinOrder += 1;
 
@@ -354,6 +444,7 @@ io.on("connection", (socket) => {
         return;
       }
 
+      clearPendingRequestTimer(room, viewerSocketId);
       room.pending.delete(viewerSocketId);
       room.approved.set(viewerSocketId, pendingViewer);
       room.active.set(viewerSocketId, pendingViewer);
@@ -409,6 +500,7 @@ io.on("connection", (socket) => {
         return;
       }
 
+      clearPendingRequestTimer(room, viewerSocketId);
       room.pending.delete(viewerSocketId);
       room.active.delete(viewerSocketId);
       room.members.delete(viewerSocketId);
@@ -595,6 +687,8 @@ io.on("connection", (socket) => {
 
       if (room) {
 
+        room.pendingTimers.forEach(timer => clearTimeout(timer));
+        room.pendingTimers.clear();
         room.pending.clear();
         room.approved.clear();
         room.active.clear();
@@ -639,6 +733,7 @@ io.on("connection", (socket) => {
             socket.data.role === "viewer"
           ) {
 
+            clearPendingRequestTimer(room, socket.id);
             room.pending.delete(socket.id);
             room.approved.delete(socket.id);
             room.active.delete(socket.id);
@@ -722,6 +817,7 @@ io.on("connection", (socket) => {
             socket.data.role === "viewer"
           ) {
 
+            clearPendingRequestTimer(room, socket.id);
             room.pending.delete(socket.id);
             room.approved.delete(socket.id);
             room.active.delete(socket.id);
@@ -784,4 +880,3 @@ server.listen(
 
   }
 );
-
