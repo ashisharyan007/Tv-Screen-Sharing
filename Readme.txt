@@ -1,24 +1,18 @@
-Step 1:- docker rm -f tv-screen-share  
+Choose a PIN that is exactly 6 letters and/or numbers. The PIN is supplied when
+the container starts; it is not set in the Docker image. For example, replace
+MyPIN9 below with your own 6-character PIN.
 
+Using Docker commands (PowerShell):
 
+docker rm -f tv-screen-share
+docker build -t tv-screen-share .
+docker run -d -p 3000:3000 -e SCREEN_SHARE_PIN=MyPIN9 --name tv-screen-share tv-screen-share
 
-Stop the running container named tv-screen-share if needed, then delete it completely
+Using Docker Compose (PowerShell):
 
+$env:SCREEN_SHARE_PIN = "MyPIN9"
+docker compose up -d --build
 
-
-Step 2:- docker build -t tv-screen-share . 
-
-
-
-It updates the folder when changes happen, builds a new image, and saves it to run later.
-
-
-
-
-
-Step 3:- docker run -d -p 3000:3000 -e SCREEN_SHARE_PIN=123456 --name tv-screen-share tv-screen-share  
-
-
-
-
-Run a background Docker container created from the tv-screen-share image, publish port 3000 to the host machine, set the environment PIN to ABC123, and name the container tv-screen-share.
+Open https://localhost:3000. If you change the PIN, recreate the container
+(or run docker compose up -d --force-recreate) with the new SCREEN_SHARE_PIN
+value.

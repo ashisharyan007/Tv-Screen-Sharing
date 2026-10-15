@@ -5,5 +5,5 @@ services:
     ports:
       - "3000:3000"
     environment:
-      SCREEN_SHARE_PIN: ABC123
+      SCREEN_SHARE_PIN: ${SCREEN_SHARE_PIN:?Set SCREEN_SHARE_PIN to your 6-character PIN}
     restart: unless-stopped
